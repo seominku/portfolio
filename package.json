@@ -6,7 +6,10 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "prepare:portfolio": "node scripts/prepare-static.mjs",
+    "predev": "npm run prepare:portfolio",
     "dev": "vinext dev",
+    "prebuild": "npm run prepare:portfolio",
     "build": "vinext build",
     "start": "wrangler dev --config dist/server/wrangler.json"
   },

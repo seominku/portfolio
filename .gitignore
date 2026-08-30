@@ -7,3 +7,4 @@ dist/
 tmp/
 *.blend*
 .next/
+public/portfolio/
