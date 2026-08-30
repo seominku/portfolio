@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.tgz
+.vinext/
+.wrangler/
+.env*
+tmp/
+*.blend*
