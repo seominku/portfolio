@@ -443,24 +443,48 @@
           </a>
         </div>
 
-        <div class="project-visual reveal delay-1" aria-label="GameUI Studio 편집기 모형">
-          <div class="window ui-window">
-            <div class="window-bar">
-              <div class="window-dots"><i></i><i></i><i></i></div>
-              <span>GameUI Studio — Main Menu</span>
-              <b>PREVIEW</b>
-            </div>
-            <div class="ui-body">
-              <aside class="layer-panel"><strong>LAYERS</strong><span>▾ Main Menu</span><span>　Background</span><span class="active">　Menu Group</span><span>　Title</span></aside>
-              <div class="ui-canvas">
-                <div class="canvas-menu"><small>ROOTBOUND</small><strong>CONTINUE</strong><span>NEW GAME</span><span>SETTINGS</span></div>
-                <div class="select-box"><i></i><i></i><i></i><i></i></div>
-              </div>
-              <aside class="property-panel"><strong>INSPECTOR</strong><label>X <i>284</i></label><label>Y <i>164</i></label><label>WIDTH <i>320</i></label><label>OPACITY <i>100%</i></label></aside>
-            </div>
-          </div>
+        <div class="project-visual reveal delay-1" aria-label="GameUI Studio 실제 실행 화면">
+          <a class="project-screenshot" href="#gameui-dialog" data-dialog="gameui-dialog" aria-label="GameUI Studio 프로젝트 상세 설명 열기">
+            <img src="assets/projects/gameui-studio-main-menu-upscaled.png" alt="GameUI Studio에서 메인 메뉴를 편집하고 프리뷰하는 실제 실행 화면" width="1697" height="927" />
+            <span class="screenshot-badge">
+              <b>ACTUAL APPLICATION</b>
+              <small>PROJECT DETAILS ↗</small>
+            </span>
+          </a>
         </div>
       </section>
+
+      <dialog class="competition-dialog project-dialog" id="gameui-dialog" aria-labelledby="gameui-dialog-title">
+        <button class="dialog-close" type="button" aria-label="상세 설명 창 닫기">×</button>
+        <div class="dialog-layout">
+          <figure class="dialog-media dialog-media-dark dialog-media-app">
+            <img src="assets/projects/gameui-studio-main-menu-upscaled.png" alt="GameUI Studio 메인 메뉴 편집 및 실행 프리뷰 화면" />
+          </figure>
+          <div class="dialog-content">
+            <p class="dialog-kicker">PROJECT 04 · GAME UI AUTHORING TOOL</p>
+            <h2 id="gameui-dialog-title">GameUI Studio</h2>
+            <div class="dialog-overview">
+              <h3>어떤 프로젝트인가?</h3>
+              <p>게임 UI의 페이지와 위젯 구조를 시각적으로 편집하고 즉시 프리뷰한 뒤, Unreal UMG·CommonUI와 Unity UI 형식으로 연결하기 위해 만든 데스크톱 제작 도구입니다.</p>
+            </div>
+            <dl class="dialog-stats">
+              <div><dt>개발 형태</dt><dd>데스크톱 UI 편집기</dd></div>
+              <div><dt>편집 모드</dt><dd>Native Edit Mode</dd></div>
+              <div><dt>주요 대상</dt><dd>Unreal 5.8 · CommonUI</dd></div>
+              <div><dt>확장 대상</dt><dd>Unity uGUI · UI Toolkit</dd></div>
+            </dl>
+            <div class="dialog-section">
+              <h3>직접 구현한 기능</h3>
+              <p>페이지·프레임·텍스트·이미지·버튼 편집, 계층 구조 재배치, 속성 인스펙터, 실행 프리뷰, 프로젝트 저장과 런타임 번들 내보내기 흐름을 구성했습니다.</p>
+            </div>
+            <div class="dialog-section dialog-section-sub">
+              <h3>현재 화면</h3>
+              <p>메인 메뉴 문서를 열어 게임 시작·설정·종료 버튼을 실행 프리뷰하고, 오른쪽 인스펙터와 하단 진단 패널에서 에셋 및 엔진 호환성을 확인하는 장면입니다.</p>
+            </div>
+            <a class="dialog-project-link" href="https://github.com/seominku/GameUiDesign" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </dialog>
 
       <section class="slide project project-red" id="rootbound" data-title="ROOTBOUND">
         <div class="project-copy reveal">
