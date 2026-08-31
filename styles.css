@@ -573,8 +573,8 @@ kbd {
 }
 
 .competition-dialog {
-  width: min(980px, calc(100vw - 40px));
-  height: min(760px, calc(100svh - 40px));
+  width: min(1120px, calc(100vw - 40px));
+  height: min(820px, calc(100svh - 40px));
   max-height: calc(100svh - 40px);
   padding: 0;
   border: 0;
@@ -724,6 +724,98 @@ kbd {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.75;
+}
+.dialog-process {
+  margin-top: 27px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: #f8f9fc;
+}
+
+.dialog-process h3,
+.dialog-takeaway h3,
+.dialog-limitations h3 {
+  margin: 0 0 9px;
+  font-size: 16px;
+}
+
+.dialog-process p,
+.dialog-takeaway p,
+.dialog-limitations p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.challenge-list {
+  display: grid;
+  gap: 12px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.challenge-list li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+  padding: 17px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.challenge-list li > span {
+  color: var(--blue);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.challenge-list strong {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.challenge-list p {
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.challenge-list code {
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: #eef1f6;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.92em;
+}
+
+.challenge-resolution {
+  margin-top: 9px !important;
+  padding-left: 12px;
+  border-left: 2px solid var(--blue);
+}
+
+.challenge-resolution b {
+  margin-right: 6px;
+  color: var(--ink);
+}
+
+.dialog-takeaway,
+.dialog-limitations {
+  padding: 18px 20px;
+  border: 1px solid #cfe4d7;
+  background: #f0f8f3;
+}
+
+.dialog-limitations {
+  margin-top: 14px;
+  border-color: #ead7ad;
+  background: #fff8e9;
 }
 
 .dialog-section-sub {

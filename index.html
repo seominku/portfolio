@@ -237,19 +237,22 @@
               <div><dt>오디오</dt><dd>RtAudio · ASIO</dd></div>
               <div><dt>확장 기능</dt><dd>VST3 · MCP</dd></div>
             </dl>
-            <div class="dialog-section">
-              <h3>직접 구현한 기능</h3>
-              <p>피아노 롤과 멀티트랙 MIDI 편집, VST3 악기·이펙트 호스팅, 믹서와 오디오 출력, MIDI Learn·MPE·MIDI 2.0 지원 기능을 구현했습니다.</p>
+            <div class="dialog-process">
+              <h3>구현 과정</h3>
+              <p>MIDI 입출력과 메시지 파서에서 시작해 시퀀서, 내장 신디사이저와 오디오 출력, 피아노 롤·믹서·VST3 호스팅 순서로 기능을 확장했습니다. 이후 MPE·MIDI 2.0과 MCP 제어를 연결하면서 UI, 파일 포맷, 실시간 오디오가 같은 상태를 바라보도록 구조를 정리했습니다.</p>
             </div>
-            <div class="dialog-section dialog-section-sub">
-              <h3>MCP 연동</h3>
-              <p>외부 AI가 트랙을 만들고 코드·멜로디·드럼을 입력하거나 재생 위치와 믹스를 직접 제어할 수 있도록 MCP 도구를 연결했습니다.</p>
-            </div>
-            <div class="dialog-section dialog-section-sub">
-              <h3>현재 화면</h3>
-              <p>MCP로 자동 생성한 126 BPM, 8마디 데모 프로젝트입니다. Drums·Bass·Chords·Lead 4개 트랙과 총 262개 노트로 구성했습니다.</p>
-            </div>
-            <a class="dialog-project-link" href="https://github.com/seominku/MidiPro" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
+            <section class="dialog-section dialog-section-sub" aria-labelledby="midipro-challenges">
+              <h3 id="midipro-challenges">시행착오와 해결</h3>
+              <ol class="challenge-list">
+                <li><span>01</span><div><strong>재생은 되지만 조작 순간 소리가 끊기는 문제</strong><p>오디오 콜백에서 로그·메모리 할당·잠금을 함께 처리하면 작은 지연도 잡음과 끊김으로 이어졌습니다.</p><p class="challenge-resolution"><b>해결</b> 오디오 스레드는 미리 할당한 버퍼와 락프리 SPSC 큐만 사용하고, 화면 갱신과 파일 작업은 메인 스레드로 분리했습니다.</p></div></li>
+                <li><span>02</span><div><strong>MCP 편집 내용이 자동 저장에 덮이는 문제</strong><p>외부 도구가 프로젝트 파일을 바꾸는 동안 앱이 열려 있으면 자동 저장이 새 내용을 다시 덮어 실제 작업이 사라지는 상황을 여러 번 겪었습니다.</p><p class="challenge-resolution"><b>해결</b> 열린 프로젝트를 검사하는 잠금 가드를 추가하고, 실행 중 제어는 네임드 파이프로 UI 스레드의 기존 명령 경로를 사용하게 했습니다.</p></div></li>
+                <li><span>03</span><div><strong>기타 줄 편집에서 프렛을 바꾸면 다른 줄로 튀는 문제</strong><p>매 프레임 가장 낮은 프렛 위치를 다시 계산해 사용자가 선택한 줄이 유지되지 않았고, 실제 기타 음역 밖 노트는 VST에서 소리가 나지 않았습니다.</p><p class="challenge-resolution"><b>해결</b> 줄 선택을 <code>tabHints</code>로 프로젝트에 저장하고, 불가능한 음만 자동 재배치하도록 순수 로직과 회귀 테스트를 추가했습니다.</p></div></li>
+              </ol>
+            </section>
+            <div class="dialog-section dialog-section-sub dialog-takeaway">
+              <h3>배운 점</h3>
+              <p>음악 도구는 기능 수보다 시간 정확도와 상태 일관성이 우선이라는 점을 배웠습니다. UI와 자동화가 서로 다른 우회 경로를 갖지 않게 하고, 실시간 처리와 일반 작업의 경계를 처음부터 명확히 두는 것이 안정성을 크게 높였습니다.</p>
+            </div>            <a class="dialog-project-link" href="https://github.com/seominku/MidiPro" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
       </dialog>
@@ -323,15 +326,22 @@
               <div><dt>파손 결과</dt><dd>Voronoi 13조각</dd></div>
               <div><dt>연결 작업</dt><dd>Unity FBX Export</dd></div>
             </dl>
-            <div class="dialog-section">
-              <h3>평면 절단</h3>
-              <p>원하는 축이나 커서 방향으로 자르고, 양쪽 조각 유지·절단면 자동 채움·조각 분리를 한 번에 처리합니다.</p>
+            <div class="dialog-process">
+              <h3>구현 과정</h3>
+              <p>월드 평면을 오브젝트 로컬 좌표로 변환하는 절단 코어부터 만들고, Boolean·Bisect와 나이프 모드, GPU 프리뷰를 차례로 연결했습니다. 마지막에는 파편 원점·UV·노멀·비정상 면을 정리하고 Unity용 FBX로 내보내는 제작 파이프라인까지 확장했습니다.</p>
             </div>
-            <div class="dialog-section dialog-section-sub">
-              <h3>충격 파손</h3>
-              <p>충격 지점 주변에 조각이 집중되도록 보로노이 셀을 만들고 각 파편의 원점까지 자동으로 정리합니다.</p>
-            </div>
-            <a class="dialog-project-link" href="https://github.com/seominku/MeshCutter" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
+            <section class="dialog-section dialog-section-sub" aria-labelledby="meshcutter-challenges">
+              <h3 id="meshcutter-challenges">시행착오와 해결</h3>
+              <ol class="challenge-list">
+                <li><span>01</span><div><strong>직교 화면에서는 되지만 원근 화면에서 절단 평면이 사라지는 문제</strong><p>원근 뷰의 두 광선은 시작점이 모두 카메라 위치라 기존 외적 공식이 0이 됐습니다. 자체 테스트가 Blender의 실제 광선 조건을 흉내 내지 않아 처음에는 문제를 잡지 못했습니다.</p><p class="challenge-resolution"><b>해결</b> 광선 방향끼리의 외적과 시작점 차이의 외적 중 유효한 쪽을 선택하고, 실제 Blender와 같은 입력으로 테스트를 다시 작성했습니다.</p></div></li>
+                <li><span>02</span><div><strong>마우스를 움직일 때 절단선이 프레임마다 깜빡이는 문제</strong><p>같은 Blender 영역도 Python 래퍼의 <code>id()</code>가 계속 바뀌었고, 커서가 사이드바를 지나면 지역 좌표의 기준도 달라졌습니다.</p><p class="challenge-resolution"><b>해결</b> 내부 포인터를 비교하는 <code>space_data</code> 기준으로 영역을 식별하고, 시작 시점의 영역 정보를 보존해 창 좌표를 일관되게 변환했습니다.</p></div></li>
+                <li><span>03</span><div><strong>나이프 투영이 커터를 인식하지 못하거나 임시 오브젝트 때문에 종료되는 문제</strong><p><code>knife_project</code>가 일반 메시 커터를 받지 않았고, 삭제된 임시 커브 참조가 결과 목록에 남아 예외를 만들었습니다.</p><p class="challenge-resolution"><b>해결</b> 화면 경로를 POLY 커브로 변환해 투영하고, 뷰 레이어 갱신 뒤 임시 커터를 명시적으로 제외했습니다. 결과는 오브젝트 참조 대신 이름으로 수집했습니다.</p></div></li>
+              </ol>
+            </section>
+            <div class="dialog-section dialog-section-sub dialog-takeaway">
+              <h3>배운 점</h3>
+              <p>Blender 도구는 기하 알고리즘만 맞아도 끝나는 것이 아니라 컨텍스트, 뷰 레이어, 좌표계와 데이터 수명까지 함께 다뤄야 했습니다. 부피 합·닫힌 메시·월드 좌표 보존·FBX 재가져오기를 자동 검증하면서 제작 도구의 신뢰도를 높였습니다.</p>
+            </div>            <a class="dialog-project-link" href="https://github.com/seominku/MeshCutter" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
       </dialog>
@@ -401,20 +411,31 @@
               <p>캐릭터 리그의 핵심 본을 자동으로 찾고, 적은 수의 컨트롤만으로 전신 포즈를 계산해 애니메이션 제작 시간을 줄이는 Blender 애드온입니다.</p>
             </div>
             <dl class="dialog-stats">
-              <div><dt>검증 캐릭터</dt><dd>Mixamo 64본 리그</dd></div>
-              <div><dt>포즈 계산</dt><dd>ONNX + FABRIK IK</dd></div>
+              <div><dt>지원 프리셋</dt><dd>Mixamo</dd></div>
+              <div><dt>포즈 계산</dt><dd>FABRIK IK · ONNX 준비</dd></div>
               <div><dt>핵심 흐름</dt><dd>Detect · Setup · Solve</dd></div>
-              <div><dt>보조 기능</dt><dd>Mirror · Bake</dd></div>
+              <div><dt>현재 상태</dt><dd>v0.13.0-alpha</dd></div>
             </dl>
-            <div class="dialog-section">
-              <h3>컨트롤 기반 전신 포즈</h3>
-              <p>Hips·Head·양손·양발을 자동 감지하고 컨트롤 본을 생성한 뒤 척추와 팔다리 사슬을 계산합니다.</p>
+            <div class="dialog-process">
+              <h3>구현 과정</h3>
+              <p>캐릭터에서 Hips·Head·양손·양발 여섯 지점을 찾고 컨트롤 본을 만드는 흐름을 먼저 구성했습니다. 이 좌표를 정규화한 뒤 FABRIK IK로 척추와 팔다리를 계산하고, 같은 솔버를 BVH·FBX·Action·NLA 리타게팅과 베이크 과정에서도 재사용하도록 확장했습니다.</p>
             </div>
-            <div class="dialog-section dialog-section-sub">
-              <h3>한 번에 좌우 반전</h3>
-              <p>컨트롤과 폴 벡터, 보조 슬라이더 값을 함께 교환해 현재 포즈를 반대 방향으로 빠르게 변환합니다.</p>
+            <section class="dialog-section dialog-section-sub" aria-labelledby="autopose-challenges">
+              <h3 id="autopose-challenges">시행착오와 해결</h3>
+              <ol class="challenge-list">
+                <li><span>01</span><div><strong>리그마다 본 이름과 계층이 달라 자동 연결이 깨지는 문제</strong><p>같은 휴머노이드라도 접두사·네임스페이스·대소문자와 좌우 본 표기가 달라 이름 하나만 기준으로 삼을 수 없었습니다.</p><p class="challenge-resolution"><b>해결</b> 자동 감지와 Mixamo 프리셋을 함께 제공하고, 수동 매핑을 JSON으로 저장했습니다. 누락 본과 좌우 뒤바뀜을 베이크 전에 진단하도록 만들었습니다.</p></div></li>
+                <li><span>02</span><div><strong>서로 다른 크기·정면 축·바닥 높이에서 포즈가 틀어지는 문제</strong><p>소스와 대상 리그의 월드 변환을 그대로 복사하면 캐릭터가 뒤집히거나 떠 있고, Root Motion의 수평·수직 이동까지 의도와 다르게 섞였습니다.</p><p class="challenge-resolution"><b>해결</b> 휴머노이드 기준 크기와 정면을 계산해 자동 보정하고, Auto Floor와 Root Motion 모드를 분리해 필요한 축만 전달했습니다.</p></div></li>
+                <li><span>03</span><div><strong>리타게팅 뒤 발이 미끄러지고 긴 베이크 실패 시 작업 상태가 남는 문제</strong><p>모든 커브를 같은 방식으로 부드럽게 만들면 접지한 발까지 움직였고, 중간 오류가 나면 새 Action과 프레임 상태가 남을 수 있었습니다.</p><p class="challenge-resolution"><b>해결</b> 발의 높이와 속도로 접촉 구간을 감지해 Foot Lock을 적용하고 발·발가락은 스무딩에서 제외했습니다. 취소나 실패 시 원래 Action·프레임·소스 상태로 복구합니다.</p></div></li>
+              </ol>
+            </section>
+            <div class="dialog-section dialog-section-sub dialog-takeaway">
+              <h3>배운 점</h3>
+              <p>캐릭터 자동화에서는 하나의 완벽한 리그를 가정하기보다 감지·프리셋·수동 수정·사전 진단을 함께 제공해야 실제 작업에 견딜 수 있다는 점을 배웠습니다.</p>
             </div>
-            <a class="dialog-project-link" href="https://github.com/seominku/AutoPose" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
+            <div class="dialog-section dialog-limitations">
+              <h3>현재 검증 범위</h3>
+              <p>컨트롤 포징과 코어 계산은 구현되어 있지만 모션캡처 리타게팅은 v0.13.0-alpha 단계입니다. 다양한 BVH·FBX·NLA와 서로 다른 축의 리그를 대상으로 한 Blender 통합 검증, Foot Lock 품질 조정과 회전 스무딩은 다음 검증 과제로 남아 있습니다.</p>
+            </div>            <a class="dialog-project-link" href="https://github.com/seominku/AutoPose" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
       </dialog>
@@ -461,7 +482,7 @@
             <img src="assets/projects/gameui-studio-main-menu-upscaled.png" alt="UI Studio 메인 메뉴 편집 및 실행 프리뷰 화면" />
           </figure>
           <div class="dialog-content">
-            <p class="dialog-kicker">PROJECT 04 · GAME UI AUTHORING TOOL</p>
+            <p class="dialog-kicker">PROJECT 04 · UI AUTHORING TOOL</p>
             <h2 id="gameui-dialog-title">UI Studio</h2>
             <div class="dialog-overview">
               <h3>어떤 프로젝트인가?</h3>
@@ -473,15 +494,22 @@
               <div><dt>캔버스 프리셋</dt><dd>Mobile · Tablet · Desktop · Web</dd></div>
               <div><dt>편집 방식</dt><dd>Edit · Interact · Preview</dd></div>
             </dl>
-            <div class="dialog-section">
-              <h3>직접 구현한 기능</h3>
-              <p>페이지·프레임·텍스트·이미지·버튼 편집, 계층 구조 재배치, 속성 인스펙터, 실행 프리뷰와 프로젝트 저장을 구현했습니다. 최신 버전에서는 Game·App·Web 유형별 템플릿과 캔버스 크기를 선택하는 3단계 프로젝트 생성 흐름도 추가했습니다.</p>
+            <div class="dialog-process">
+              <h3>구현 과정</h3>
+              <p>프로젝트 문서 Schema와 Command 계약을 먼저 고정한 뒤 Preview, 편집기, Native 저장과 복구를 단계적으로 연결했습니다. 공개 UI 기능은 같은 Command를 MCP에서도 사용할 수 있도록 설계하고, 최근에는 Game·App·Web 템플릿과 네 가지 캔버스 프리셋으로 범위를 확장했습니다.</p>
             </div>
-            <div class="dialog-section dialog-section-sub">
-              <h3>편집 화면</h3>
-              <p>메인 메뉴 문서의 게임 시작·설정·종료 버튼을 실행 프리뷰하고, 오른쪽 인스펙터와 하단 진단 패널에서 에셋 및 엔진 호환성을 확인하는 장면입니다. 요소를 끌어 움직일 때는 실시간 드래그와 스마트 스냅으로 정렬을 보조합니다.</p>
-            </div>
-            <a class="dialog-project-link" href="https://github.com/seominku/GameUiDesign" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
+            <section class="dialog-section dialog-section-sub" aria-labelledby="ui-studio-challenges">
+              <h3 id="ui-studio-challenges">시행착오와 해결</h3>
+              <ol class="challenge-list">
+                <li><span>01</span><div><strong>프로젝트를 연 뒤 드래그가 멈추고 선택 테두리가 어긋나는 문제</strong><p>버튼 안의 Text를 누르면 부모 버튼이 아닌 중첩 노드가 선택되거나, 화면 DOM과 문서 좌표의 변환 차이로 선택 표시가 밀렸습니다.</p><p class="challenge-resolution"><b>해결</b> 실제 포인터 입력으로 중첩 Text부터 드래그하는 전용 검증 MCP를 만들었습니다. 마우스를 놓기 전에는 문서 Revision을 바꾸지 않고, 놓은 뒤 정확히 하나의 <code>TransformSet</code>만 기록되는지 확인합니다.</p></div></li>
+                <li><span>02</span><div><strong>저장 실패 시 파일과 편집 상태 중 어느 쪽이 최신인지 모호해지는 문제</strong><p>파일 교체 전 실패와 교체 후 응답 실패는 의미가 다른데 같은 오류로 처리하면 원본을 덮거나 잘못된 Undo 상태를 유지할 수 있었습니다.</p><p class="challenge-resolution"><b>해결</b> prepare·write·finalize 단계를 분리하고 해시·Revision·parity를 검증했습니다. 교체 전 실패는 기존 문서와 history를 보존하고, 완료 여부가 불확실하면 권위를 폐기해 다시 열도록 했습니다.</p></div></li>
+                <li><span>03</span><div><strong>템플릿을 다른 캔버스 크기로 만들면 요소가 화면 밖으로 나가는 문제</strong><p>데스크톱 기준 좌표를 모바일과 웹에 그대로 적용하면 크기와 위치가 부모 경계를 넘고, 같은 이름으로 새 프로젝트를 만들 때 기존 파일을 덮을 위험도 있었습니다.</p><p class="challenge-resolution"><b>해결</b> 여섯 템플릿과 네 프리셋 조합을 비율로 변환하고 부모 영역 안으로 제한했습니다. 새 프로젝트는 사용 가능한 이름을 찾아 생성하고 원본 파일은 절대 덮지 않도록 했습니다.</p></div></li>
+              </ol>
+            </section>
+            <div class="dialog-section dialog-section-sub dialog-takeaway">
+              <h3>배운 점</h3>
+              <p>편집기는 화면을 그리는 기능보다 문서·Preview·파일 시스템 사이의 권한과 실패 경계를 정의하는 일이 더 중요했습니다. 실제 포인터, DOM 위치, Command, 저장된 문서를 한 번에 검증해야 회귀를 정확히 막을 수 있었습니다.</p>
+            </div>            <a class="dialog-project-link" href="https://github.com/seominku/GameUiDesign" target="_blank" rel="noreferrer">GitHub 저장소 보기 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
       </dialog>
@@ -578,15 +606,26 @@
               <div><dt>체크리스트</dt><dd>91 / 122 완료</dd></div>
               <div><dt>현재 단계</dt><dd>QA · 폴리싱</dd></div>
             </dl>
-            <div class="dialog-section">
-              <h3>게임 시스템 제작</h3>
-              <p>기억 순서 기반 콤보, 계약의 보상과 페널티, 사망 뒤 장비 선택과 성장 계승, 락온·회피·적 AI·장비 드랍을 하나의 플레이 흐름으로 연결했습니다.</p>
+            <div class="dialog-process">
+              <h3>구현 과정</h3>
+              <p>기억 순서 기반 콤보와 전투를 중심으로 죽음·계승 규칙, 장비 드랍, 적 AI와 절차 맵을 하나의 반복 플레이 흐름으로 연결했습니다. 기능이 늘면서 기획 문서와 실제 Unity 상태가 어긋나는 문제를 줄이기 위해 시스템 명세·에셋·체크리스트·QA 기록을 Project Hub에 함께 정리했습니다.</p>
             </div>
-            <div class="dialog-section dialog-section-sub">
-              <h3>Project Hub 구축</h3>
-              <p>세계관과 스토리, 시스템 명세, 무기·방어구·몬스터 카탈로그, 개발 체크리스트와 변경 이력을 발표와 협업에 맞게 탐색할 수 있는 정적 웹사이트로 정리했습니다.</p>
+            <section class="dialog-section dialog-section-sub" aria-labelledby="rootbound-challenges">
+              <h3 id="rootbound-challenges">시행착오와 해결</h3>
+              <ol class="challenge-list">
+                <li><span>01</span><div><strong>사망 후 두 번째 런에서 이동이나 기억 콤보가 깨지는 문제</strong><p>공격 중 죽으면 전투 상태가 ATTACK에 남았고, 장비를 다시 들어도 기억 순서가 전투 컴포넌트에 재동기화되지 않아 기본 공격만 실행됐습니다.</p><p class="challenge-resolution"><b>해결</b> 사망 시작 시 콤보를 강제 종료하고, 결과 화면→장비 선택→패널티→저장→런 초기화를 순차 처리했습니다. 다음 런에는 보유 기억과 장착 순서를 다시 연결했습니다.</p></div></li>
+                <li><span>02</span><div><strong>절차 맵의 물길·다리와 성능을 동시에 맞추기 어려운 문제</strong><p>배수 둑 값이 높으면 강이 웅덩이처럼 불어나 다리를 잠기게 했고, 전 층을 한 번에 정적 배칭하면 Unity 에디터 메모리가 약 12GB까지 올라 멈췄습니다.</p><p class="challenge-resolution"><b>해결</b> 수위와 다리 간격을 실측해 안전값을 정하고 구간별 수위를 적용했습니다. 정적 배칭은 층별 지연 방식으로 바꿨습니다.</p></div></li>
+                <li><span>03</span><div><strong>화면 전환 뒤 카메라와 UI 입력 상태가 남는 문제</strong><p>사망 후 캠프로 돌아오면 카메라 구도가 달라지거나 커스터마이징 미리보기에 월드 오브젝트가 끼어들었고, 닫힌 패널이 입력을 막는 회귀도 있었습니다.</p><p class="challenge-resolution"><b>해결</b> 씬 로드 뒤 카메라를 재연결하고 전용 렌더 레이어로 캐릭터만 분리했습니다. 캠프→런→사망→캠프 흐름을 반복하며 패널 표시와 입력 차단을 함께 점검했습니다.</p></div></li>
+              </ol>
+            </section>
+            <div class="dialog-section dialog-section-sub dialog-takeaway">
+              <h3>배운 점</h3>
+              <p>시스템이 많은 게임은 개별 기능의 완료보다 한 번의 런을 두 번 이상 반복했을 때 상태가 올바르게 복원되는지가 중요했습니다. 구현 현황과 위험 요소를 웹 허브에 동기화하면서 다음 QA 우선순위도 더 명확해졌습니다.</p>
             </div>
-            <div class="dialog-project-links">
+            <div class="dialog-section dialog-limitations">
+              <h3>남은 과제</h3>
+              <p>절차 생성 시드 기록과 스폰→출구 경로 검증, 세이브 버전 마이그레이션, 락온 스트레이프와 전체 런 회귀 테스트가 남아 있습니다. 발표에서는 구현 완료 기능과 QA가 필요한 항목을 구분해 보여줄 예정입니다.</p>
+            </div>            <div class="dialog-project-links">
               <a class="dialog-project-link" href="https://seominku.github.io/capstone2026-project-hub/" target="_blank" rel="noreferrer">Project Hub 보기 <span aria-hidden="true">↗</span></a>
               <a class="dialog-project-link dialog-project-link-secondary" href="https://github.com/seominku/capstone2026-project-hub" target="_blank" rel="noreferrer">GitHub 저장소 <span aria-hidden="true">↗</span></a>
             </div>
