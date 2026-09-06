@@ -1166,6 +1166,14 @@ kbd {
   background: #101a19;
 }
 
+.webtest-dialog-gallery {
+  background: #0f172a;
+}
+
+.webtest-dialog-gallery img {
+  object-fit: cover;
+}
+
 .dialog-project-links {
   display: flex;
   flex-wrap: wrap;
